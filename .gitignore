@@ -1,0 +1,27 @@
+**/bin/
+**/obj/
+client/node_modules/
+server/wwwroot/
+server/App_Data/
+/document/
+/work/
+/server/work/
+*.user
+/.venv/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+**/__pycache__/
+/tmp/
+.DS_Store
+/output/
+
+# Local verification output
+.pytest_cache/
+.venv/
+work/
+*.tsbuildinfo

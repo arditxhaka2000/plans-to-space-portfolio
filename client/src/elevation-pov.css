@@ -1,0 +1,31 @@
+.elevation-pov-pad {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 4;
+  width: min(260px, calc(100% - 24px));
+  padding: 10px;
+  border-radius: 9px;
+  background: #102d23e8;
+  box-shadow: 0 8px 28px #0d231b45;
+  color: white;
+  text-align: center;
+  user-select: none;
+}
+.elevation-pov-pad b { display: block; margin-bottom: 6px; color: #d8efdf; font-size: 10px; letter-spacing: .1em; }
+.elevation-pov-pad div { display: flex; justify-content: center; gap: 6px; margin-top: 5px; }
+.elevation-pov-pad button { width: 44px; min-height: 40px; padding: 4px; }
+.elevation-pov-pad small { display: block; margin-top: 7px; color: #c6d8cb; font-size: 9px; }
+@media (max-width:640px) { .elevation-pov-pad { top: 8px; left: 8px; width: 220px; } }
+@media (max-width:640px) {
+  html { scroll-behavior: smooth; }
+  body { overflow-x: hidden; }
+  header { position: static; }
+  .sidebar { position: static; overflow: visible; }
+  .controls-open .sidebar { display: block; }
+  .content main { height: auto; min-height: 0; }
+  .model, .drawing, .compare .model, .compare .drawing { height: min(68dvh, 560px); min-height: 360px; }
+  canvas { touch-action: pan-y; }
+  .person-pov canvas { touch-action: none; }
+  #mobile-controls { position: sticky; top: 8px; z-index: 60; }
+}

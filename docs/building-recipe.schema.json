@@ -1,0 +1,681 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "material": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Material",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "kind": {
+          "enum": [
+            "wall",
+            "window",
+            "door",
+            "roof",
+            "slab",
+            "column",
+            "railing",
+            "solar panel",
+            "other"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "center": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            },
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            },
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            }
+          ],
+          "title": "Center",
+          "type": "array"
+        },
+        "size": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 10000,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 10000,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 10000,
+              "type": "number"
+            }
+          ],
+          "title": "Size",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "material",
+        "evidence",
+        "kind",
+        "center",
+        "size"
+      ],
+      "title": "Box",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "pages": {
+          "items": {
+            "maximum": 100000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Pages",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "printed",
+            "measured",
+            "interpreted",
+            "estimated"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reference": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pages",
+        "status",
+        "reference"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Group": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "members": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_./:-]+$",
+            "type": "string"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "title": "Members",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "members"
+      ],
+      "title": "Group",
+      "type": "object"
+    },
+    "Level": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "elevation": {
+          "maximum": 10000,
+          "minimum": -10000,
+          "title": "Elevation",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "elevation"
+      ],
+      "title": "Level",
+      "type": "object"
+    },
+    "Material": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "color": {
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Color",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "color"
+      ],
+      "title": "Material",
+      "type": "object"
+    },
+    "Opening": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "window",
+            "door"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "offset": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Offset",
+          "type": "number"
+        },
+        "sill": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Sill",
+          "type": "number"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Height",
+          "type": "number"
+        },
+        "frame": {
+          "default": 0.04,
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Frame",
+          "type": "number"
+        },
+        "material": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Material",
+          "type": "string"
+        },
+        "frameMaterial": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Framematerial",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "offset",
+        "sill",
+        "width",
+        "height",
+        "material",
+        "frameMaterial",
+        "evidence"
+      ],
+      "title": "Opening",
+      "type": "object"
+    },
+    "Roof": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "material": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Material",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "vertices": {
+          "items": {
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "maximum": 10000,
+                "minimum": -10000,
+                "type": "number"
+              },
+              {
+                "maximum": 10000,
+                "minimum": -10000,
+                "type": "number"
+              },
+              {
+                "maximum": 10000,
+                "minimum": -10000,
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 128,
+          "minItems": 3,
+          "title": "Vertices",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "material",
+        "evidence",
+        "vertices"
+      ],
+      "title": "Roof",
+      "type": "object"
+    },
+    "Volume": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "material": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Material",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "footprint": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "maximum": 10000,
+                "minimum": -10000,
+                "type": "number"
+              },
+              {
+                "maximum": 10000,
+                "minimum": -10000,
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 128,
+          "minItems": 3,
+          "title": "Footprint",
+          "type": "array"
+        },
+        "level": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Level",
+          "type": "string"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Height",
+          "type": "number"
+        },
+        "slabThickness": {
+          "default": 0.26,
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Slabthickness",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "material",
+        "evidence",
+        "footprint",
+        "level",
+        "height"
+      ],
+      "title": "Volume",
+      "type": "object"
+    },
+    "Wall": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "material": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_./:-]+$",
+          "title": "Material",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "start": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            },
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            }
+          ],
+          "title": "Start",
+          "type": "array"
+        },
+        "end": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            },
+            {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            }
+          ],
+          "title": "End",
+          "type": "array"
+        },
+        "base": {
+          "maximum": 10000,
+          "minimum": -10000,
+          "title": "Base",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Height",
+          "type": "number"
+        },
+        "thickness": {
+          "exclusiveMinimum": 0,
+          "maximum": 10000,
+          "title": "Thickness",
+          "type": "number"
+        },
+        "openings": {
+          "items": {
+            "$ref": "#/$defs/Opening"
+          },
+          "maxItems": 64,
+          "title": "Openings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "material",
+        "evidence",
+        "start",
+        "end",
+        "base",
+        "height",
+        "thickness"
+      ],
+      "title": "Wall",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0",
+      "title": "Schemaversion",
+      "type": "string"
+    },
+    "label": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Label",
+      "type": "string"
+    },
+    "interpretation": {
+      "enum": [
+        "manually-interpreted",
+        "automatically-interpreted"
+      ],
+      "title": "Interpretation",
+      "type": "string"
+    },
+    "units": {
+      "const": "metres",
+      "title": "Units",
+      "type": "string"
+    },
+    "axes": {
+      "const": "X-right,Y-up,Z-plan-down",
+      "title": "Axes",
+      "type": "string"
+    },
+    "sourceDocumentHash": {
+      "pattern": "^[a-fA-F0-9]{64}$",
+      "title": "Sourcedocumenthash",
+      "type": "string"
+    },
+    "assumptions": {
+      "items": {
+        "maxLength": 2000,
+        "type": "string"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "unresolved": {
+      "items": {
+        "maxLength": 2000,
+        "type": "string"
+      },
+      "maxItems": 100,
+      "title": "Unresolved",
+      "type": "array"
+    },
+    "materials": {
+      "items": {
+        "$ref": "#/$defs/Material"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Materials",
+      "type": "array"
+    },
+    "levels": {
+      "items": {
+        "$ref": "#/$defs/Level"
+      },
+      "maxItems": 200,
+      "minItems": 1,
+      "title": "Levels",
+      "type": "array"
+    },
+    "volumes": {
+      "items": {
+        "$ref": "#/$defs/Volume"
+      },
+      "maxItems": 500,
+      "title": "Volumes",
+      "type": "array"
+    },
+    "walls": {
+      "items": {
+        "$ref": "#/$defs/Wall"
+      },
+      "maxItems": 5000,
+      "title": "Walls",
+      "type": "array"
+    },
+    "roofs": {
+      "items": {
+        "$ref": "#/$defs/Roof"
+      },
+      "maxItems": 500,
+      "title": "Roofs",
+      "type": "array"
+    },
+    "boxes": {
+      "items": {
+        "$ref": "#/$defs/Box"
+      },
+      "maxItems": 20000,
+      "title": "Boxes",
+      "type": "array"
+    },
+    "groups": {
+      "items": {
+        "$ref": "#/$defs/Group"
+      },
+      "maxItems": 5000,
+      "title": "Groups",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "label",
+    "interpretation",
+    "units",
+    "axes",
+    "sourceDocumentHash",
+    "assumptions",
+    "unresolved",
+    "materials",
+    "levels"
+  ],
+  "title": "Recipe",
+  "type": "object"
+}

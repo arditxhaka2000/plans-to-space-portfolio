@@ -1,0 +1,17 @@
+type Job={id:string;recipeHash:string;status:string;revisionId:string|null;error:string|null};
+export async function automaticReview(documentId:string,hasModel:boolean){
+ const call=async(url:string,post=false)=>{const headers:Record<string,string>={};if(post)headers['X-CSRF-TOKEN']=(await(await fetch('/api/csrf')).json()).token;const response=await fetch(url,{method:post?'POST':'GET',headers});if(!response.ok)throw Error((await response.json().catch(()=>null))?.message??`Request failed (${response.status})`);return response.json();};
+ const panel=document.createElement('section');panel.className='card';panel.id='automatic-model';panel.style.cssText='width:100%;flex-basis:100%';const title=document.createElement('h2');title.textContent='Generate model from PDF';const status=document.createElement('p');status.setAttribute('role','status');const action=document.createElement('button');action.textContent='Generate model from this PDF';const links=document.createElement('div');panel.append(title,status,action,links);document.querySelector('.processing')!.prepend(panel);
+ const admin=(await call('/api/me')).role==='admin';let timer:number|undefined;
+ const error=(e:unknown)=>{status.textContent=String(e);action.disabled=false};
+ action.onclick=async()=>{try{action.disabled=true;await call(`/api/documents/${documentId}/interpret`,true);await refresh()}catch(e){error(e)}};
+ async function refresh(){window.clearTimeout(timer);const jobs:Job[]=await call(`/api/documents/${documentId}/recipe-builds`);const job=jobs.find(j=>j.recipeHash.startsWith('pdf:'));links.replaceChildren();action.hidden=!admin||!!job&&job.recipeHash==='pdf:drawing-interpreter-1.0.1';action.textContent=job?'Generate with updated interpreter':'Generate model from this PDF';action.disabled=false;
+ if(!job){status.textContent='The app will read drawing geometry, dimensions and floor relationships, then build a selectable draft. No recipe file is required.';return;}
+ if(job.status==='Queued'||job.status==='Running'){status.textContent=job.status==='Queued'?'Model generation queued. You can close this page.':'Interpreting drawings and generating the model. This continues if you close the page.';timer=window.setTimeout(()=>void refresh().catch(error),2500);return;}
+ if(job.status==='Completed'&&job.revisionId){status.textContent='PDF model generated. Geometry, inferred openings and dimensions require review.';const link=document.createElement('a');link.textContent='Open generated model';link.href=`${location.pathname}?revision=${job.revisionId}`;links.append(link);if(!hasModel){location.assign(link.href);return;}}
+ else status.textContent=job.error??'The drawing needs additional information before a model can be built.';
+ if(job.status!=='Completed'&&job.status!=='NeedsInput')return;
+ const response=await fetch(`/api/recipe-builds/${job.id}/files/interpretation.json`);if(response.ok){const report=await response.json();const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Drawing interpretation and items to review';details.append(summary);const list=document.createElement('ul');for(const text of [...(report.issues??[]),...(report.assumptions??[])]){const item=document.createElement('li');item.textContent=text;list.append(item);}details.append(list);const download=document.createElement('a');download.href=response.url;download.textContent='Download interpretation evidence';details.append(download);links.append(details);}
+ }
+ await refresh().catch(error);
+}

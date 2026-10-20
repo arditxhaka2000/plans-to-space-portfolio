@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Building viewer · Plans to Space</title><link rel="stylesheet" href="/portal/review.css"></head>
+<body><header><a id="back" href="/dashboard">← Workspace</a><h1>Building viewer</h1><span>Building geometry · accuracy requires review</span></header>
+<main><section class="processing"><p id="status" role="status">Loading…</p><progress id="progress" max="100" value="0"></progress><p id="error" role="alert"></p></section>
+<div id="results" hidden><section class="viewer-layout" id="viewer-layout">
+<div class="card model-card"><div class="viewer-heading"><div><span class="eyebrow">EXPLORE YOUR BUILDING</span><h2>Interactive building</h2></div><button id="toggle-source" aria-expanded="false" aria-controls="drawing-panel">Show PDF context</button></div>
+<div class="toolbar"><button id="orbit">3D view</button><button id="top">Top view</button><button id="fit">Fit building</button><button id="export-glb" hidden>Download GLB</button></div>
+<div id="viewport"><canvas aria-label="Interactive building model"></canvas></div><p class="preview-notice">Imported or reconstructed geometry. Architectural accuracy requires review.</p><p id="picked">Select a component to review its metadata and source links.</p></div>
+<aside class="card" id="drawing-panel" hidden><span class="eyebrow">SOURCE REFERENCE</span><h2>PDF context</h2></aside>
+</section></div></main><script type="module" src="/src/review.ts"></script></body></html>
